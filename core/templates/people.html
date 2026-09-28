@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}People 👥 SocialMood{% endblock %}
+
+{% block content %}
+<h2 style="text-align:center">👥 Meet People 🤝🌍</h2>
+{% for u in users %}
+<a href="{% url 'profile' u.username %}">
+  <div class="card row">
+    <div class="avatar" data-name="{{ u.username }}">{{ u.username|first|upper }}</div>
+    <strong>@{{ u.username }}</strong> <span>👋😄</span>
+  </div>
+</a>
+{% empty %}
+<div class="card meta" style="text-align:center">🦗 No other users yet. Invite your friends! 🎉</div>
+{% endfor %}
+{% endblock %}

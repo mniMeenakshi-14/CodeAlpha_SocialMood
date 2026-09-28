@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}@{{ owner.username }} 🙋 SocialMood{% endblock %}
+
+{% block content %}
+<div class="card" style="text-align:center">
+  <div class="avatar big" style="margin:0 auto 10px" data-name="{{ owner.username }}">{{ owner.username|first|upper }}</div>
+  <h2 style="margin-bottom:2px">🌟 @{{ owner.username }} 🌟</h2>
+  <p class="meta">📝 {{ owner.profile.bio|default:"No bio yet. 🤫" }}</p>
+  <div class="stats">
+    <div><b>📸 {{ posts|length }}</b><span class="meta">Posts</span></div>
+    <div><b>💖 {{ followers_count }}</b><span class="meta">Followers</span></div>
+    <div><b>👀 {{ following_count }}</b><span class="meta">Following</span></div>
+  </div>
+  {% if owner != user %}
+  <form method="post" action="{% url 'toggle_follow' owner.username %}">
+    {% csrf_token %}
+    <button class="btn{% if is_following %} outline{% endif %}" type="submit">{% if is_following %}💔 Unfollow{% else %}💜 Follow{% endif %}</button>
+  </form>
+  {% endif %}
+</div>
+
+{% for post in posts %}
+<div class="card">
+  <span class="meta">🕒 {{ post.created|timesince }} ago</span>
+  <p class="post-text">💬 {{ post.text }}</p>
+  <span class="meta">❤️ {{ post.likes.count }} · 💭 {{ post.comments.count }}</span>
+</div>
+{% empty %}
+<div class="card meta" style="text-align:center">😴 No posts yet. 🌙</div>
+{% endfor %}
+{% endblock %}

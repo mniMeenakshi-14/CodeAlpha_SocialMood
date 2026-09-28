@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}SocialMood ✨ Share Your Vibe{% endblock %}</title>
+  <style>
+    :root {
+      --bg1: #ffe4f3; --bg2: #e0d4ff; --bg3: #d4f1ff;
+      --card: rgba(255,255,255,.78); --text: #2a1f45; --muted: #7c6f9b; --border: rgba(255,255,255,.9);
+      --brand1: #8b5cf6; --brand2: #ec4899; --shadow: 0 8px 30px rgba(139,92,246,.18);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg1: #1b1030; --bg2: #14112b; --bg3: #0e1c33; --card: rgba(38,30,66,.78); --text: #f3eeff; --muted: #a79fc9; --border: rgba(255,255,255,.08); --shadow: 0 8px 30px rgba(0,0,0,.45); }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: "Segoe UI", system-ui, sans-serif; color: var(--text); line-height: 1.5;
+           background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3)); background-attachment: fixed; }
+    a { color: var(--brand1); text-decoration: none; }
+
+    /* floating emoji background */
+    #sky { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+    #sky span { position: absolute; bottom: -60px; opacity: .55; animation: floatUp linear infinite; }
+    @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(-115vh) rotate(360deg); } }
+
+    nav { position: sticky; top: 0; z-index: 20; background: linear-gradient(90deg, #8b5cf6, #ec4899, #f59e0b);
+          padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+          box-shadow: 0 6px 20px rgba(236,72,153,.35); }
+    nav a, nav button { color: #fff; font-weight: 700; margin-left: 12px; background: none; border: none; font-size: .95rem; cursor: pointer; font-family: inherit; }
+    nav a:hover, nav button:hover { transform: scale(1.12); display: inline-block; }
+    .logo { font-size: 1.5rem; font-weight: 900; margin: 0; letter-spacing: 1px; text-shadow: 0 0 12px rgba(255,255,255,.9), 0 2px 6px rgba(0,0,0,.25); }
+    .logo .spin { display: inline-block; animation: spin 4s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .hero { text-align: center; margin: 4px 0 22px; }
+    .hero h1 { margin: 0; font-size: clamp(2.4rem, 11vw, 3.8rem); font-weight: 900; letter-spacing: 1px; line-height: 1.1;
+               background: linear-gradient(90deg, #ff0080, #ff8c00, #ffd400, #22c55e, #06b6d4, #8b5cf6, #ff0080);
+               background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+               -webkit-text-fill-color: transparent; animation: rainbow 5s linear infinite; filter: drop-shadow(0 4px 10px rgba(139,92,246,.35)); }
+    @keyframes rainbow { to { background-position: 300% 0; } }
+    .hero .crown { font-size: 2.4rem; display: inline-block; animation: bounce 1.6s ease-in-out infinite; }
+    @keyframes bounce { 50% { transform: translateY(-10px) rotate(8deg); } }
+    .hero .tagline { margin: 8px 0 0; font-size: 1.1rem; font-weight: 700; color: var(--brand1); }
+    .hero .tagline2 { margin: 4px 0 0; font-size: .95rem; color: var(--muted); }
+
+    .container { position: relative; z-index: 1; max-width: 620px; margin: 22px auto; padding: 0 14px; }
+    .banner { text-align: center; font-size: 1.4rem; letter-spacing: 6px; margin-bottom: 14px; animation: wiggle 3s ease-in-out infinite; }
+    @keyframes wiggle { 50% { transform: scale(1.06) rotate(-1deg); } }
+
+    .card { position: relative; background: var(--card); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 2px solid var(--border); border-radius: 22px; padding: 16px; margin-bottom: 18px; box-shadow: var(--shadow); transition: transform .2s; }
+    .card:hover { transform: translateY(-3px) rotate(-.3deg); }
+    .card::before { position: absolute; top: -14px; right: 14px; font-size: 1.6rem; content: "✨"; }
+    .card:nth-of-type(6n+1)::before { content: "🌈"; }
+    .card:nth-of-type(6n+2)::before { content: "💖"; }
+    .card:nth-of-type(6n+3)::before { content: "🎈"; }
+    .card:nth-of-type(6n+4)::before { content: "🌸"; }
+    .card:nth-of-type(6n+5)::before { content: "🦄"; }
+    .card::after { position: absolute; bottom: -12px; left: 14px; font-size: 1.3rem; content: "⭐"; }
+    .card:nth-of-type(3n+1)::after { content: "🍭"; }
+    .card:nth-of-type(3n+2)::after { content: "🎀"; }
+
+    .avatar { width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+              font-size: 1.6rem; background: linear-gradient(135deg, #fbcfe8, #ddd6fe); border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+    .avatar.big { width: 92px; height: 92px; font-size: 3rem; }
+    .row { display: flex; align-items: center; gap: 12px; }
+    .post-text { font-size: 1.08rem; margin: 10px 0; white-space: pre-wrap; word-wrap: break-word; }
+
+    textarea, input { width: 100%; padding: 12px 14px; border: 2px dashed #c4b5fd; border-radius: 16px; font-size: 1rem;
+                      font-family: inherit; background: rgba(255,255,255,.6); color: #2a1f45; margin-bottom: 8px; outline: none; }
+    textarea:focus, input:focus { border-style: solid; border-color: var(--brand2); box-shadow: 0 0 0 4px rgba(236,72,153,.2); }
+    .btn { background: linear-gradient(90deg, #8b5cf6, #ec4899); color: #fff; border: none; padding: 11px 26px;
+           border-radius: 999px; font-size: 1rem; font-weight: 700; cursor: pointer; font-family: inherit; box-shadow: 0 4px 14px rgba(236,72,153,.4); }
+    .btn:hover { transform: scale(1.06) rotate(-1deg); }
+    .btn.outline { background: none; color: var(--brand1); border: 2px solid var(--brand1); box-shadow: none; }
+
+    .meta { color: var(--muted); font-size: .85rem; }
+    .actions { display: flex; align-items: center; gap: 18px; padding-top: 10px; border-top: 2px dotted #d8b4fe; }
+    .like-btn { background: none; border: none; font-size: 1.15rem; cursor: pointer; color: var(--text); font-family: inherit; }
+    .like-btn.pop { animation: pop .35s ease; }
+    @keyframes pop { 50% { transform: scale(1.5) rotate(10deg); } }
+    .burst { position: fixed; font-size: 1.6rem; pointer-events: none; z-index: 99; animation: burst .9s ease-out forwards; }
+    @keyframes burst { to { transform: translate(var(--dx), var(--dy)) scale(.4); opacity: 0; } }
+
+    .comment { background: rgba(196,181,253,.25); border-radius: 14px; padding: 8px 12px; margin: 6px 0; font-size: .92rem; }
+    .stats { display: flex; gap: 24px; margin: 12px 0; justify-content: center; }
+    .stats b { display: block; font-size: 1.25rem; }
+    .auth { max-width: 420px; margin: 30px auto 18px; text-align: center; }
+    .auth p { text-align: left; }
+    .errorlist { color: #e11d48; padding-left: 18px; text-align: left; font-size: .85rem; }
+    .helptext { display: block; color: var(--muted); font-size: .75rem; }
+    h2 { margin-top: 0; }
+  </style>
+</head>
+<body>
+  <div id="sky"></div>
+  <nav>
+    <a href="{% url 'feed' %}" class="logo"><span class="spin">🌈</span> Social<span style="color:#fff59d">Mood</span> <span class="spin">✨</span></a>
+    <div>
+      {% if user.is_authenticated %}
+        <a href="{% url 'feed' %}">🏠 Home</a>
+        <a href="{% url 'people' %}">👥 People</a>
+        <a href="{% url 'profile' user.username %}">🙋 @{{ user.username }}</a>
+        <form method="post" action="{% url 'logout' %}" style="display:inline">
+          {% csrf_token %}<button type="submit">🚪 Logout</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}">🔑 Login</a>
+        <a href="{% url 'register' %}">🎊 Sign up</a>
+      {% endif %}
+    </div>
+  </nav>
+  <div class="container">
+    <div class="hero">
+      <span class="crown">👑</span>
+      <h1>SocialMood</h1>
+      <p class="tagline">🌈 Share your vibe. Spread the mood! 💖</p>
+      <p class="tagline2">🎉 Post · 💬 Chat · ❤️ Like · 🤝 Connect 🎈</p>
+    </div>
+    {% block content %}{% endblock %}
+    <div class="banner" style="margin-top:20px">🌟🍕🎮🎵📸🐱🐶🍦🚀💫</div>
+  </div>
+
+  <script>
+    // Floating emoji background
+    const SKY = ["😀","😍","🥳","🤩","😎","💖","💜","✨","🌈","🎈","🎉","🦄","🌸","🍭","🎀","⭐","🔥","🍕","🎮","🎵","📸","🐱","🐶","🍦","🚀","💫","🌻","🍓"];
+    const sky = document.getElementById("sky");
+    for (let i = 0; i < 45; i++) {
+      const s = document.createElement("span");
+      s.textContent = SKY[Math.floor(Math.random() * SKY.length)];
+      s.style.left = Math.random() * 100 + "%";
+      s.style.fontSize = (18 + Math.random() * 30) + "px";
+      s.style.animationDuration = (12 + Math.random() * 18) + "s";
+      s.style.animationDelay = (-Math.random() * 30) + "s";
+      sky.appendChild(s);
+    }
+    // Emoji avatars: same username always gets the same emoji
+    const AV = ["🐱","🐶","🦊","🐼","🐯","🦁","🐸","🐵","🦄","🐧","🐙","🦋","🐰","🐨","🐳","🦉"];
+    document.querySelectorAll(".avatar").forEach(a => {
+      const n = a.dataset.name || ""; let sum = 0;
+      for (const c of n) sum += c.charCodeAt(0);
+      if (n) a.textContent = AV[sum % AV.length];
+    });
+    // Emoji burst helper (used by like button)
+    function burst(x, y, emoji) {
+      for (let i = 0; i < 8; i++) {
+        const b = document.createElement("span");
+        b.className = "burst"; b.textContent = emoji;
+        b.style.left = x + "px"; b.style.top = y + "px";
+        b.style.setProperty("--dx", (Math.random() * 160 - 80) + "px");
+        b.style.setProperty("--dy", (-40 - Math.random() * 120) + "px");
+        document.body.appendChild(b);
+        setTimeout(() => b.remove(), 900);
+      }
+    }
+  </script>
+</body>
+</html>

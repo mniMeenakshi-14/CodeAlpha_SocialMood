@@ -1,0 +1,58 @@
+
+{% extends "base.html" %}
+{% block title %}Feed 🏠 SocialMood{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="row" style="align-items:flex-start">
+    <div class="avatar" data-name="{{ user.username }}">{{ user.username|first|upper }}</div>
+    <form method="post" action="{% url 'create_post' %}" style="flex:1">
+      {% csrf_token %}
+      <textarea name="text" rows="2" maxlength="280" placeholder="✍️ What's your mood today? 😎🔥" required></textarea>
+      <div style="text-align:right"><button class="btn" type="submit">🚀 Post ✨</button></div>
+    </form>
+  </div>
+</div>
+
+{% for post in posts %}
+<div class="card">
+  <div class="row">
+    <div class="avatar" data-name="{{ post.author.username }}">{{ post.author.username|first|upper }}</div>
+    <div>
+      <a href="{% url 'profile' post.author.username %}"><strong>@{{ post.author.username }}</strong> 😄</a><br>
+      <span class="meta">🕒 {{ post.created|timesince }} ago</span>
+    </div>
+  </div>
+  <p class="post-text">💬 {{ post.text }}</p>
+  <div class="actions">
+    <button class="like-btn" data-id="{{ post.id }}">{% if user in post.likes.all %}❤️ {% else %}🤍 {% endif %}<span class="count">{{ post.likes.count }}</span></button>
+    <span class="meta">💭 {{ post.comments.count }}</span>
+  </div>
+  {% for c in post.comments.all %}
+    <div class="comment">😊 <strong>@{{ c.author.username }}</strong> {{ c.text }}</div>
+  {% endfor %}
+  <form method="post" action="{% url 'add_comment' post.id %}" style="margin-top:8px">
+    {% csrf_token %}
+    <input name="text" maxlength="200" placeholder="💌 Write a comment..." required style="margin:0">
+  </form>
+</div>
+{% empty %}
+<div class="card meta" style="text-align:center;font-size:1.1rem">😴 No posts yet. Write the first one! 🚀🎉</div>
+{% endfor %}
+
+<script>
+document.querySelectorAll(".like-btn").forEach(btn => {
+  btn.addEventListener("click", async (e) => {
+    const res = await fetch(`/like/${btn.dataset.id}/`, {
+      method: "POST",
+      headers: { "X-CSRFToken": "{{ csrf_token }}" }
+    });
+    const data = await res.json();
+    btn.firstChild.textContent = data.liked ? "❤️ " : "🤍 ";
+    btn.querySelector(".count").textContent = data.count;
+    btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop");
+    if (data.liked) burst(e.clientX, e.clientY, ["❤️","💖","✨","🎉","💜"][Math.floor(Math.random()*5)]);
+  });
+});
+</script>
+{% endblock %}
