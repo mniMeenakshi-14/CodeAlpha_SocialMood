@@ -1,9 +1,12 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}SocialMood ✨ Share Your Vibe{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
+  <title>{% block title %}🌈 SocialMood ✨ Share Your Vibe{% endblock %}</title>
   <style>
     :root {
       --bg1: #ffe4f3; --bg2: #e0d4ff; --bg3: #d4f1ff;
@@ -28,16 +31,18 @@
           box-shadow: 0 6px 20px rgba(236,72,153,.35); }
     nav a, nav button { color: #fff; font-weight: 700; margin-left: 12px; background: none; border: none; font-size: .95rem; cursor: pointer; font-family: inherit; }
     nav a:hover, nav button:hover { transform: scale(1.12); display: inline-block; }
-    .logo { font-size: 1.5rem; font-weight: 900; margin: 0; letter-spacing: 1px; text-shadow: 0 0 12px rgba(255,255,255,.9), 0 2px 6px rgba(0,0,0,.25); }
-    .logo .spin { display: inline-block; animation: spin 4s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .logo { font-family: "Bubblegum Sans", cursive; font-size: 1.8rem; font-weight: 400; margin: 0; letter-spacing: .5px; text-shadow: 0 0 12px rgba(255,255,255,.9), 0 2px 6px rgba(0,0,0,.25); }
+    .brand { position: relative; display: inline-block; }
+    .brand .em { position: absolute; font-size: .34em; line-height: 1; }
+    .brand .em1 { top: -.5em; left: .05em; transform: rotate(-18deg); }
+    .brand .em2 { top: -.55em; right: -.15em; transform: rotate(12deg); }
+    .brand .em3 { bottom: -.15em; right: -.35em; transform: rotate(-8deg); }
+    .logo .brand .em { font-size: .5em; }
 
     .hero { text-align: center; margin: 4px 0 22px; }
-    .hero h1 { margin: 0; font-size: clamp(2.4rem, 11vw, 3.8rem); font-weight: 900; letter-spacing: 1px; line-height: 1.1;
-               background: linear-gradient(90deg, #ff0080, #ff8c00, #ffd400, #22c55e, #06b6d4, #8b5cf6, #ff0080);
-               background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
-               -webkit-text-fill-color: transparent; animation: rainbow 5s linear infinite; filter: drop-shadow(0 4px 10px rgba(139,92,246,.35)); }
-    @keyframes rainbow { to { background-position: 300% 0; } }
+    .hero h1 { margin: 0; font-family: "Bubblegum Sans", cursive; font-size: clamp(2.8rem, 13vw, 4.6rem); font-weight: 400; letter-spacing: .5px; line-height: 1.1;
+               background: linear-gradient(90deg, #8b5cf6, #ec4899, #f59e0b); -webkit-background-clip: text; background-clip: text; color: transparent;
+               -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 10px rgba(139,92,246,.35)); }
     .hero .crown { font-size: 2.4rem; display: inline-block; animation: bounce 1.6s ease-in-out infinite; }
     @keyframes bounce { 50% { transform: translateY(-10px) rotate(8deg); } }
     .hero .tagline { margin: 8px 0 0; font-size: 1.1rem; font-weight: 700; color: var(--brand1); }
@@ -95,7 +100,7 @@
 <body>
   <div id="sky"></div>
   <nav>
-    <a href="{% url 'feed' %}" class="logo"><span class="spin">🌈</span> Social<span style="color:#fff59d">Mood</span> <span class="spin">✨</span></a>
+    <a href="{% url 'feed' %}" class="logo"><span class="brand">SocialMood<span class="em em1">📸</span><span class="em em2">✨</span><span class="em em3">💖</span></span></a>
     <div>
       {% if user.is_authenticated %}
         <a href="{% url 'feed' %}">🏠 Home</a>
@@ -112,8 +117,7 @@
   </nav>
   <div class="container">
     <div class="hero">
-      <span class="crown">👑</span>
-      <h1>SocialMood</h1>
+      <h1><span class="brand">SocialMood<span class="em em1">📸</span><span class="em em2">✨</span><span class="em em3">💖</span></span></h1>
       <p class="tagline">🌈 Share your vibe. Spread the mood! 💖</p>
       <p class="tagline2">🎉 Post · 💬 Chat · ❤️ Like · 🤝 Connect 🎈</p>
     </div>

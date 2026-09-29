@@ -30,8 +30,9 @@ def feed(request):
 def create_post(request):
     if request.method == "POST":
         text = request.POST.get("text", "").strip()
-        if text:
-            Post.objects.create(author=request.user, text=text)
+        image=request.FILES.get("image")
+        if text or image:
+            Post.objects.create(author=request.user, text=text, image=image)
     return redirect("feed")
 
 
