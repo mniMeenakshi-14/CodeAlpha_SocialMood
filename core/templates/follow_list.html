@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ heading }} · @{{ owner.username }} · SocialMood{% endblock %}
+
+{% block content %}
+<h2 style="text-align:center">{{ heading }} of @{{ owner.username }} 👥</h2>
+{% for p in people %}
+<a href="{% url 'profile' p.username %}">
+  <div class="card row">
+    <div class="avatar" data-name="{{ p.username }}">{{ p.username|first|upper }}</div>
+    <strong>@{{ p.username }}</strong>
+  </div>
+</a>
+{% empty %}
+<div class="card meta" style="text-align:center">😴 Nobody here yet.</div>
+{% endfor %}
+{% endblock %}

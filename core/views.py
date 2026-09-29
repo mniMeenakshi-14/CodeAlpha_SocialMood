@@ -87,3 +87,29 @@ def add_comment(request, post_id):
 def people(request):
     users = User.objects.exclude(id=request.user.id)
     return render(request, "people.html", {"users": users})
+
+@login_required
+def edit_bio(request):
+    if request.method == "POST":
+        bio = request.POST.get("bio", "").strip()
+        request.user.profile.bio = bio
+        request.user.profile.save()
+        return redirect("profile", username=request.user.username)
+    return render(request, "edit_bio.html")
+
+@login_required
+def followers_list(request, username):
+    owner = get_object_or_404(User, username=username)
+    people = [p.user for p in owner.profile.followers.all()]
+    return render(request, "follow_list.html", {
+        "owner": owner, "people": people, "heading": "Followers"
+    })
+
+
+@login_required
+def following_list(request, username):
+    owner = get_object_or_404(User, username=username)
+    people = [p.user for p in owner.profile.following.all()]
+    return render(request, "follow_list.html", {
+        "owner": owner, "people": people, "heading": "Following"
+    })

@@ -6,10 +6,13 @@
   <div class="avatar big" style="margin:0 auto 10px" data-name="{{ owner.username }}">{{ owner.username|first|upper }}</div>
   <h2 style="margin-bottom:2px">🌟 @{{ owner.username }} 🌟</h2>
   <p class="meta">📝 {{ owner.profile.bio|default:"No bio yet. 🤫" }}</p>
+  {% if owner == user %}
+    <a href="{% url 'edit_bio' %}" class="btn outline" style="display:inline-block;margin-bottom:10px">✏️ Edit Bio</a>
+  {% endif %}
   <div class="stats">
     <div><b>📸 {{ posts|length }}</b><span class="meta">Posts</span></div>
-    <div><b>💖 {{ followers_count }}</b><span class="meta">Followers</span></div>
-    <div><b>👀 {{ following_count }}</b><span class="meta">Following</span></div>
+    <a href="{% url 'followers_list' owner.username %}"><div><b>💖 {{ followers_count }}</b><span class="meta">Followers</span></div></a>
+    <a href="{% url 'following_list' owner.username %}"><div><b>👀 {{ following_count }}</b><span class="meta">Following</span></div></a>
   </div>
   {% if owner != user %}
   <form method="post" action="{% url 'toggle_follow' owner.username %}">
