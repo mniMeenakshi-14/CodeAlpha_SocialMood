@@ -113,3 +113,10 @@ def following_list(request, username):
     return render(request, "follow_list.html", {
         "owner": owner, "people": people, "heading": "Following"
     })
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if post.author == request.user:
+        post.delete()
+    return redirect("feed")

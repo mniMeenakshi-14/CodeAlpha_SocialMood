@@ -29,6 +29,12 @@
   <div class="actions">
     <button class="like-btn" data-id="{{ post.id }}">{% if user in post.likes.all %}❤️ {% else %}🤍 {% endif %}<span class="count">{{ post.likes.count }}</span></button>
     <span class="meta">💭 {{ post.comments.count }}</span>
+    {% if post.author == user %}
+      <form method="post" action="{% url 'delete_post' post.id %}" style="margin-left:auto" onsubmit="return confirm('Delete this post? 😢 This cannot be undone.')">
+        {% csrf_token %}
+        <button type="submit" class="like-btn" style="color:#e11d48">🗑️ Delete</button>
+      </form>
+    {% endif %}
   </div>
   {% for c in post.comments.all %}
     <div class="comment">😊 <strong>@{{ c.author.username }}</strong> {{ c.text }}</div>
