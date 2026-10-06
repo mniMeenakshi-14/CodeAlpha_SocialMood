@@ -1,13 +1,8 @@
-{% extends "base.html" %}
-{% block title %}Edit Bio ✏️ SocialMood{% endblock %}
-
-{% block content %}
-<div class="card auth">
-  <h2>✏️ Edit Your Bio 📝</h2>
-  <form method="post">
-    {% csrf_token %}
-    <textarea name="bio" rows="3" maxlength="160" placeholder="Tell people about yourself... 😊">{{ user.profile.bio }}</textarea>
-    <button class="btn" type="submit">💾 Save</button>
-  </form>
-</div>
-{% endblock %}
+@login_required
+def edit_bio(request):
+    if request.method == "POST":
+        bio = request.POST.get("bio", "").strip()
+        request.user.profile.bio = bio
+        request.user.profile.save()
+        return redirect("profile", username=request.user.username)
+    return render(request, "edit_bio.html")

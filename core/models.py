@@ -13,8 +13,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
-
-
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     text = models.TextField(max_length=280, blank=True)
